@@ -100,8 +100,11 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 					<img
 						src={vinylImg}
 						alt="Vinyl disc"
-						className={`z-20 absolute inset-0 w-full h-full object-contain rounded-full ${isPlaying ? "animate-spin" : ""}`}
-						style={isPlaying ? { animationDuration: "8s" } : undefined}
+						className="z-20 absolute inset-0 w-full h-full object-contain rounded-full animate-spin"
+						style={{
+							animationDuration: "8s",
+							animationPlayState: isPlaying ? "running" : "paused",
+						}}
 					/>
 					<div className="absolute inset-0 flex items-center justify-center">
 						<div className="w-10/12 aspect-video relative overflow-hidden rounded-md shadow-md">
@@ -109,7 +112,7 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 								<img
 									src={youtubeInfo?.thumbnail_url}
 									alt={youtubeInfo?.title}
-									className="w-full h-full object-cover rounded z-10 relative"
+									className="w-9/12 h-full object-cover rounded z-10 relative mx-auto"
 								/>
 							) : null}
 							<iframe
