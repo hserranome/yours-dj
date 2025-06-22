@@ -107,12 +107,12 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 						}}
 					/>
 					<div className="absolute inset-0 flex items-center justify-center">
-						<div className="w-10/12 aspect-video relative overflow-hidden rounded-md shadow-md">
+						<div className="w-10/12 aspect-video relative overflow-hidden rounded-md shadow-md pointer-events-none">
 							{!isPlaying ? (
 								<img
 									src={youtubeInfo?.thumbnail_url}
 									alt={youtubeInfo?.title}
-									className="w-9/12 h-full object-cover rounded z-10 relative mx-auto bg-yellow-600 pointer-events-none"
+									className="w-9/12 h-full object-cover rounded z-10 relative mx-auto bg-yellow-600"
 								/>
 							) : null}
 							<iframe
