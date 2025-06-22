@@ -31,6 +31,7 @@ interface SessionState {
 
 	// actions
 	addToLibrary: (item: LibraryItem) => void;
+	removeFromLibrary: (id: string) => void;
 	setTrack: (side: PlayerSide, id: string) => void;
 	setVolume: (side: PlayerSide, v: number) => void;
 	toggleMute: (side: PlayerSide) => void;
@@ -56,6 +57,9 @@ export const useSessionStore = create<SessionState>()(
 			controls: { crossfader: 0.5 },
 
 			addToLibrary: (item) => set((s) => ({ library: [...s.library, item] })),
+
+			removeFromLibrary: (id) =>
+				set((s) => ({ library: s.library.filter((v) => v.id !== id) })),
 
 			setTrack: (side, id) =>
 				set((s) => ({

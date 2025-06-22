@@ -28,7 +28,9 @@ export const CenterControls = ({
 		<div className="flex flex-col items-center justify-end gap-6">
 			<div className="relative w-full max-w-md h-48 flex items-center justify-center mb-auto overflow-hidden rounded-lg">
 				<div
-					className={`absolute inset-0 bg-repeat-x bg-center bg-cover select-none pointer-events-none ${anyPlaying ? "animate-marquee-bg" : ""}`}
+					className={
+						"absolute inset-0 bg-repeat-x bg-center bg-cover select-none pointer-events-none animate-marquee-bg"
+					}
 					style={{
 						backgroundImage: `url(${plateBackground})`,
 						animationDuration: "8s",
