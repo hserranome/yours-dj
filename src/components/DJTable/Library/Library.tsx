@@ -1,5 +1,5 @@
-import { getYoutubeInfo } from "./utils/getYoutubeInfo";
-import { useSessionStore } from "../../store/session";
+import { getYoutubeInfo } from "../utils/getYoutubeInfo";
+import { useSessionStore } from "../../../store/session";
 import { useState } from "react";
 
 function extractVideoId(url: string): string | null {
