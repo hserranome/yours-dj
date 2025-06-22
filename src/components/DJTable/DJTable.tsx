@@ -1,6 +1,6 @@
 import { useSessionStore } from "../../store/session";
 import { useVideoState } from "./utils/useVideoState";
-import { usePlaybackManager } from "./utils/usePlaybackManager";
+import { usePlaybackControls } from "./utils/usePlaybackControls";
 import { SidePlayer } from "./SidePlayer";
 import { getVolumes } from "./utils/getVolumes";
 import { CenterControls } from "./CenterControls";
@@ -13,9 +13,9 @@ export const DJTable = () => {
 	const left = useVideoState();
 	const right = useVideoState();
 
-	const { playAll, pauseAll, stopAll } = usePlaybackManager(
-		left.ref?.current,
-		right.ref?.current,
+	const { playAll, pauseAll, stopAll } = usePlaybackControls(
+		left.ref,
+		right.ref,
 	);
 
 	const volumes = getVolumes(crossfader, left, right);
