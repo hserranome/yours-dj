@@ -1,10 +1,6 @@
+import { getYoutubeInfo } from "./utils/getYoutubeInfo";
+import { useSessionStore } from "../../store/session";
 import { useState } from "react";
-import { getYoutubeInfo, type YoutubeInfo } from "./utils/getYoutubeInfo";
-
-interface LibraryItem extends YoutubeInfo {
-	url: string;
-	id: string; // the 11-char YouTube ID
-}
 
 function extractVideoId(url: string): string | null {
 	const regex =
@@ -15,7 +11,8 @@ function extractVideoId(url: string): string | null {
 
 export const Library = () => {
 	const [urlInput, setUrlInput] = useState("");
-	const [items, setItems] = useState<LibraryItem[]>([]);
+	const library = useSessionStore((s) => s.library);
+	const addToLibrary = useSessionStore((s) => s.addToLibrary);
 	const [error, setError] = useState<string | null>(null);
 	const [loading, setLoading] = useState(false);
 
@@ -30,7 +27,13 @@ export const Library = () => {
 		try {
 			setLoading(true);
 			const info = await getYoutubeInfo(urlInput.trim());
-			setItems((prev) => [...prev, { ...info, url: urlInput.trim(), id }]);
+			addToLibrary({
+				id,
+				url: urlInput.trim(),
+				title: info.title,
+				author: info.author_name,
+				thumbnail: info.thumbnail_url,
+			});
 			setUrlInput("");
 		} catch (err) {
 			setError((err as Error).message);
@@ -65,7 +68,7 @@ export const Library = () => {
 
 				{/* Video list */}
 				<div className="flex-1 overflow-y-auto space-y-2">
-					{items.map((item) => (
+					{library.map((item) => (
 						<button
 							key={item.id + item.url}
 							className="flex items-center gap-2 bg-gray-900 p-2 rounded cursor-grab active:cursor-grabbing focus:ring-2 focus:ring-indigo-500 outline-none"
@@ -78,7 +81,7 @@ export const Library = () => {
 							}}
 						>
 							<img
-								src={item.thumbnail_url}
+								src={item.thumbnail}
 								alt={item.title}
 								className="w-12 h-8 object-cover rounded"
 							/>
@@ -88,14 +91,14 @@ export const Library = () => {
 								</p>
 								<p
 									className="text-[10px] text-gray-400 truncate"
-									title={item.author_name}
+									title={item.author}
 								>
-									{item.author_name}
+									{item.author}
 								</p>
 							</div>
 						</button>
 					))}
-					{items.length === 0 && (
+					{library.length === 0 && (
 						<p className="text-gray-400 text-sm">No videos added yet.</p>
 					)}
 				</div>

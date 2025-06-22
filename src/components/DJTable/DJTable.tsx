@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useSessionStore } from "../../store/session";
 import { useVideoState } from "./utils/useVideoState";
 import { usePlaybackManager } from "./utils/usePlaybackManager";
 import { SidePlayer } from "./SidePlayer";
@@ -7,7 +7,8 @@ import { CenterControls } from "./CenterControls";
 import { Library } from "./Library";
 
 export const DJTable = () => {
-	const [crossfader, setCrossfader] = useState(0.5);
+	const crossfader = useSessionStore((s) => s.controls.crossfader);
+	const setCrossfader = useSessionStore((s) => s.setCrossfader);
 
 	const left = useVideoState();
 	const right = useVideoState();
