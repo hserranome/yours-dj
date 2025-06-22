@@ -13,8 +13,8 @@ export const SidePlayer = ({
 	muted: boolean;
 }) => {
 	return (
+		// biome-ignore lint/a11y/noStaticElementInteractions: <TODO: fix later>
 		<div
-			// biome-ignore lint/a11y/useSemanticElements: <TODO: fix later>
 			className="md:col-span-1 flex flex-col gap-2 border-2 border-transparent"
 			onDragOver={(e) => {
 				e.preventDefault();
