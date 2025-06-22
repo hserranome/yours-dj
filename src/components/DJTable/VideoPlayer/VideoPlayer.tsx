@@ -68,24 +68,7 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 			() => ({
 				play: () => {
 					applyVolumeMute();
-					if (playerState.current === "stopped") {
-						// For YouTube, we need to load the video first if stopped
-						if (iframeRef.current?.contentWindow) {
-							const message = {
-								event: "loadVideoById",
-								videoId,
-								startSeconds: 0,
-								suggestedQuality: "large",
-							};
-							iframeRef.current.contentWindow.postMessage(
-								JSON.stringify(message),
-								"*",
-							);
-							// Apply volume right after sending load command
-						}
-					} else {
-						sendCommand("playVideo");
-					}
+					sendCommand("playVideo");
 					updateState("playing");
 				},
 				pause: () => {
@@ -98,7 +81,7 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 				},
 				getState: () => playerState.current,
 			}),
-			[videoId, sendCommand, updateState, applyVolumeMute],
+			[sendCommand, updateState, applyVolumeMute],
 		);
 
 		useEffect(() => {
