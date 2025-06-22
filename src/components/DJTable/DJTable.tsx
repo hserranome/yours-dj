@@ -1,22 +1,61 @@
-import { useCallback, useState } from "react";
-import { VideoPlayer } from "./VideoPlayer";
+import { useCallback, useState, useRef } from "react";
+import { VideoPlayer, type VideoPlayerRef, type PlayerState } from "./VideoPlayer";
 import { Crossfader } from "./Crossfader";
+import { PlaybackControls } from "./PlaybackControls";
+
+type VideoState = {
+  id: string;
+  volume: number;
+  isMuted: boolean;
+  state: PlayerState;
+};
 
 export const DJTable = () => {
-	// Default video IDs (can be made configurable later)
-	const [leftVideo, setLeftVideo] = useState({
-		id: "dQw4w9WgXcQ", // Default video ID (Rick Astley - Never Gonna Give You Up)
-		volume: 0.5,
-		isMuted: false,
-	});
+  // Refs for video player controls
+  const leftVideoRef = useRef<VideoPlayerRef>(null);
+  const rightVideoRef = useRef<VideoPlayerRef>(null);
 
-	const [rightVideo, setRightVideo] = useState({
-		id: "9bZkp7q19f0", // Default video ID (PSY - GANGNAM STYLE)
-		volume: 0.5,
-		isMuted: false,
-	});
+  // Video states
+  const [leftVideo, setLeftVideo] = useState<VideoState>({
+    id: "dQw4w9WgXcQ", // Default video ID (Rick Astley - Never Gonna Give You Up)
+    volume: 0.5,
+    isMuted: false,
+    state: 'stopped',
+  });
 
-	const [crossfader, setCrossfader] = useState(0.5); // 0 = left, 1 = right
+  const [rightVideo, setRightVideo] = useState<VideoState>({
+    id: "9bZkp7q19f0", // Default video ID (PSY - GANGNAM STYLE)
+    volume: 0.5,
+    isMuted: false,
+    state: 'stopped',
+  });
+
+  const [crossfader, setCrossfader] = useState(0.5); // 0 = left, 1 = right
+  
+  // Handle video state changes
+  const handleLeftVideoStateChange = (state: PlayerState) => {
+    setLeftVideo(prev => ({ ...prev, state }));
+  };
+
+  const handleRightVideoStateChange = (state: PlayerState) => {
+    setRightVideo(prev => ({ ...prev, state }));
+  };
+  
+  // Global playback controls
+  const playAll = () => {
+    leftVideoRef.current?.play();
+    rightVideoRef.current?.play();
+  };
+  
+  const pauseAll = () => {
+    leftVideoRef.current?.pause();
+    rightVideoRef.current?.pause();
+  };
+  
+  const stopAll = () => {
+    leftVideoRef.current?.stop();
+    rightVideoRef.current?.stop();
+  };
 
 	// Calculate effective volumes based on crossfader position
 	const getEffectiveVolumes = useCallback(() => {
@@ -46,8 +85,9 @@ export const DJTable = () => {
 			<div className="container mx-auto">
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 					{/* Left Video */}
-					<div className="md:col-span-1">
+					<div className="md:col-span-1 flex flex-col gap-2">
 						<VideoPlayer
+              ref={leftVideoRef}
 							videoId={leftVideo.id}
 							volume={leftVideo.volume}
 							effectiveVolume={leftVolume}
@@ -58,19 +98,38 @@ export const DJTable = () => {
 							onMuteToggle={() =>
 								setLeftVideo((prev) => ({ ...prev, isMuted: !prev.isMuted }))
 							}
+              onStateChange={handleLeftVideoStateChange}
 						/>
+            <div className="mt-2">
+              <PlaybackControls
+                onPlay={() => leftVideoRef.current?.play()}
+                onPause={() => leftVideoRef.current?.pause()}
+                onStop={() => leftVideoRef.current?.stop()}
+                className="justify-start"
+              />
+            </div>
 					</div>
 
-					{/* Crossfader */}
-					<div className="flex items-center justify-center md:px-4">
-						<div className="w-full max-w-md">
-							<Crossfader value={crossfader} onChange={setCrossfader} />
-						</div>
-					</div>
+					{/* Center Controls */}
+          <div className="flex flex-col items-center justify-center gap-6">
+            <div className="w-full max-w-md">
+              <Crossfader value={crossfader} onChange={setCrossfader} />
+            </div>
+            <div className="bg-gray-800 p-4 rounded-lg w-full max-w-md">
+              <h3 className="text-center font-medium mb-3">Global Controls</h3>
+              <PlaybackControls
+                onPlay={playAll}
+                onPause={pauseAll}
+                onStop={stopAll}
+                className="justify-center"
+              />
+            </div>
+          </div>
 
 					{/* Right Video */}
-					<div className="md:col-span-1">
+					<div className="md:col-span-1 flex flex-col gap-2">
 						<VideoPlayer
+              ref={rightVideoRef}
 							videoId={rightVideo.id}
 							volume={rightVideo.volume}
 							effectiveVolume={rightVolume}
@@ -81,7 +140,16 @@ export const DJTable = () => {
 							onMuteToggle={() =>
 								setRightVideo((prev) => ({ ...prev, isMuted: !prev.isMuted }))
 							}
+              onStateChange={handleRightVideoStateChange}
 						/>
+            <div className="mt-2">
+              <PlaybackControls
+                onPlay={() => rightVideoRef.current?.play()}
+                onPause={() => rightVideoRef.current?.pause()}
+                onStop={() => rightVideoRef.current?.stop()}
+                className="justify-end"
+              />
+            </div>
 					</div>
 				</div>
 			</div>
