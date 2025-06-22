@@ -5,6 +5,7 @@ import {
 	forwardRef,
 	useCallback,
 } from "react";
+import vinylImg from "../../../assets/vinyl.png";
 
 export type PlayerState = "stopped" | "playing" | "paused";
 
@@ -97,19 +98,31 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 			[videoId, sendCommand, updateState, applyVolumeMute],
 		);
 
+		const isPlaying = playerState.current === "playing";
+
 		return (
-			<div className="flex flex-col items-center w-full h-full">
-				<div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden">
-					<iframe
-						ref={iframeRef}
-						width="100%"
-						height="100%"
-						src={`https://www.youtube.com/embed/${videoId}?enablejsapi=1&version=3&playerapiid=ytplayer`}
-						title="YouTube video player"
-						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-						allowFullScreen
-						className="absolute inset-0 w-full h-full"
+			<div className="flex flex-col items-center w-full">
+				<div className="relative h-72 w-72 justify-center items-center">
+					<img
+						src={vinylImg}
+						alt="Vinyl disc"
+						className={`z-10 absolute inset-0 w-full h-full object-contain rounded-full ${isPlaying ? "animate-spin" : ""}`}
+						style={isPlaying ? { animationDuration: "8s" } : undefined}
 					/>
+					<div className="absolute inset-0 flex items-center justify-center">
+						<div className="w-10/12 aspect-video relative overflow-hidden rounded-md shadow-md">
+							<iframe
+								ref={iframeRef}
+								width="100%"
+								height="100%"
+								src={`https://www.youtube.com/embed/${videoId}?enablejsapi=1&version=3&playerapiid=ytplayer&controls=0`}
+								title="YouTube video player"
+								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+								allowFullScreen
+								className="absolute inset-0 w-full h-full"
+							/>
+						</div>
+					</div>
 				</div>
 			</div>
 		);
