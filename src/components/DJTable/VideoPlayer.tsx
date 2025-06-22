@@ -63,16 +63,21 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 			}
 		}, []);
 
-		// Helper to apply volume & mute settings to the iframe
-    const applyVolumeMute = useCallback(() => {
-      sendCommand("setVolume", Math.round(effectiveVolume * 100));
-      sendCommand(isMuted ? "mute" : "unMute");
-    }, [effectiveVolume, isMuted, sendCommand]);
+		const applyVolumeMute = useCallback(() => {
+			sendCommand("setVolume", Math.round(effectiveVolume * 100));
+			sendCommand(isMuted ? "mute" : "unMute");
+		}, [effectiveVolume, isMuted, sendCommand]);
 
-    useImperativeHandle(
+		// Keep updated in YT player
+		useEffect(() => {
+			applyVolumeMute();
+		}, [applyVolumeMute]);
+
+		useImperativeHandle(
 			ref,
 			() => ({
 				play: () => {
+					applyVolumeMute();
 					if (playerState.current === "stopped") {
 						// For YouTube, we need to load the video first if stopped
 						if (iframeRef.current?.contentWindow) {
@@ -87,7 +92,6 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 								"*",
 							);
 							// Apply volume right after sending load command
-							applyVolumeMute();
 						}
 					} else {
 						sendCommand("playVideo");
@@ -106,38 +110,6 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 			}),
 			[videoId, sendCommand, updateState, applyVolumeMute],
 		);
-
-		// Handle YouTube API ready
-		useEffect(() => {
-			const handleMessage = (event: MessageEvent) => {
-				if (event.origin !== "https://www.youtube.com") return;
-
-				try {
-					console.log("YouTube message:", event.data);
-					const data = JSON.parse(event.data);
-					if (data.event === "onReady") {
-        applyVolumeMute();
-      } else if (data.event === "onStateChange") {
-						if (data.info === 1) updateState("playing");
-						else if (data.info === 2) updateState("paused");
-						else if (data.info === 0) updateState("stopped");
-					}
-				} catch (error) {
-					// Invalid JSON or other error, ignore
-					console.error("Error parsing YouTube message:", error);
-				}
-			};
-
-			window.addEventListener("message", handleMessage);
-			return () => window.removeEventListener("message", handleMessage);
-		}, [updateState, applyVolumeMute]);
-
-		// applyVolumeMute defined earlier
-
-    useEffect(() => {
-      // Try immediately; if player not ready, we'll retry on 'onReady'.
-      applyVolumeMute();
-    }, [applyVolumeMute]);
 
 		return (
 			<div className="flex flex-col items-center w-full h-full">
