@@ -1,6 +1,7 @@
 import { PlaybackControls } from "./PlaybackControls";
 import type { useVideoState } from "./utils/useVideoState";
 import { VideoPlayer } from "./VideoPlayer";
+import { VolumeSlider } from "./VolumeSlider";
 
 export const SidePlayer = ({
 	side,
@@ -32,11 +33,8 @@ export const SidePlayer = ({
 			<VideoPlayer
 				ref={side.ref}
 				videoId={side.id}
-				volume={side.volume}
 				effectiveVolume={effectiveVolume}
-				onVolumeChange={(volume) => side.change({ volume })}
 				isMuted={muted}
-				onMuteToggle={() => side.change({ isMuted: !side.isMuted })}
 				onStateChange={(state) => side.change({ state })}
 			/>
 			<div className="mt-2">
@@ -45,6 +43,14 @@ export const SidePlayer = ({
 					onPause={() => side.ref.current?.pause()}
 					onStop={() => side.ref.current?.stop()}
 					className="justify-start"
+				/>
+			</div>
+			<div className="mt-4">
+				<VolumeSlider
+					isMuted={muted}
+					onMuteToggle={() => side.change({ isMuted: !side.isMuted })}
+					volume={side.volume}
+					onVolumeChange={(volume) => side.change({ volume })}
 				/>
 			</div>
 		</div>

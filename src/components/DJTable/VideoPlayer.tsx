@@ -17,27 +17,13 @@ export interface VideoPlayerRef {
 
 interface VideoPlayerProps {
 	videoId: string;
-	volume: number; // The volume level to show in the UI (0-1)
 	effectiveVolume: number; // The actual volume to apply to the video (0-1)
-	onVolumeChange: (volume: number) => void;
 	isMuted: boolean;
-	onMuteToggle: () => void;
 	onStateChange?: (state: PlayerState) => void;
 }
 
 const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
-	(
-		{
-			videoId,
-			volume,
-			effectiveVolume,
-			onVolumeChange,
-			isMuted,
-			onMuteToggle,
-			onStateChange,
-		},
-		ref,
-	) => {
+	({ videoId, effectiveVolume, isMuted, onStateChange }, ref) => {
 		const iframeRef = useRef<HTMLIFrameElement>(null);
 		const playerState = useRef<PlayerState>("stopped");
 
@@ -124,28 +110,6 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 						allowFullScreen
 						className="absolute inset-0 w-full h-full"
 					/>
-				</div>
-				<div className="mt-4 w-full px-4">
-					<div className="flex items-center gap-4">
-						<button
-							type="button"
-							onClick={onMuteToggle}
-							className="p-2 rounded-full hover:bg-gray-700 transition-colors"
-							aria-label={isMuted ? "Unmute" : "Mute"}
-						>
-							{isMuted ? "🔇" : "🔊"}
-						</button>
-						<input
-							type="range"
-							min="0"
-							max="1"
-							step="0.01"
-							value={volume}
-							onChange={(e) => onVolumeChange(parseFloat(e.target.value))}
-							className="flex-1 accent-indigo-500"
-						/>
-						<span className="w-12 text-right">{Math.round(volume * 100)}%</span>
-					</div>
 				</div>
 			</div>
 		);
