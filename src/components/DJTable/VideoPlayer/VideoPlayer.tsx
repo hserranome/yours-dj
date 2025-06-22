@@ -6,6 +6,7 @@ import {
 	useCallback,
 	useState,
 } from "react";
+import clsx from "clsx";
 import vinylImg from "../../../assets/vinyl.png";
 import { getYoutubeInfo, type YoutubeInfo } from "../utils/getYoutubeInfo";
 
@@ -99,21 +100,24 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 		const isPlaying = playerState.current === "playing";
 
 		return (
-			<div className="flex flex-col items-center w-full">
+			<div className="flex flex-col items-center w-full overflow-hidden">
 				<div
-					className={`overflow-hidden relative h-72 w-72 justify-center items-center ${highlight ? "ring-4 ring-indigo-400 rounded-full" : ""}`}
+					className={clsx(
+						"animate-spin relative h-72 w-72 justify-center items-center",
+						highlight ? "ring-4 ring-indigo-400 rounded-full" : "",
+					)}
+					style={{
+						animationDuration: "8s",
+						animationPlayState: isPlaying ? "running" : "paused",
+					}}
 				>
 					<img
 						src={vinylImg}
 						alt="Vinyl disc"
-						className="z-20 absolute inset-0 w-full h-full object-contain rounded-full animate-spin"
-						style={{
-							animationDuration: "8s",
-							animationPlayState: isPlaying ? "running" : "paused",
-						}}
+						className="z-20 absolute inset-0 w-full h-full object-contain rounded-full"
 					/>
 					<div className="absolute inset-0 flex items-center justify-center">
-						<div className="w-10/12 aspect-video relative overflow-hidden rounded-md shadow-md pointer-events-none">
+						<div className="w-10/12 aspect-video relative rounded-md shadow-md pointer-events-none">
 							{!isPlaying ? (
 								<img
 									src={youtubeInfo?.thumbnail_url}
