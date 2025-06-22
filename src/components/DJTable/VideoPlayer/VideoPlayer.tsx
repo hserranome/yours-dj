@@ -130,9 +130,18 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 					</div>
 				</div>
 				{youtubeInfo?.title && (
-					<p className="mt-4 w-72 text-center text-sm font-medium truncate" title={youtubeInfo.title}>
-						{youtubeInfo.title}
-					</p>
+					<div
+						className="mt-4 w-72 overflow-hidden whitespace-nowrap"
+						title={youtubeInfo.title}
+					>
+						<p
+							className={
+								"inline-block text-sm font-medium pr-4 animate-marquee"
+							}
+						>
+							{youtubeInfo.title}
+						</p>
+					</div>
 				)}
 			</div>
 		);
