@@ -1,6 +1,5 @@
 import { useSessionStore } from "../../../store/session";
 
-
 export const VideoList: React.FC = () => {
 	const library = useSessionStore((s) => s.library);
 	const removeFromLibrary = useSessionStore((s) => s.removeFromLibrary);
@@ -38,7 +37,8 @@ export const VideoList: React.FC = () => {
 							{item.author}
 						</p>
 					</div>
-					<button type="button"
+					<button
+						type="button"
 						onClick={(e) => {
 							e.stopPropagation();
 							removeFromLibrary(item.id);
