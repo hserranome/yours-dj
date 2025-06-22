@@ -15,7 +15,7 @@ export const CenterControls = ({
 	stopAll: () => void;
 }) => {
 	return (
-		<div className="flex flex-col items-center justify-center gap-6">
+		<div className="flex flex-col items-center justify-end gap-6">
 			<div className="w-full max-w-md">
 				<Crossfader value={crossfader} onChange={setCrossfader} />
 			</div>
