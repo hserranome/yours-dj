@@ -12,8 +12,10 @@ export const SidePlayer = ({
 	muted: boolean;
 }) => {
 	return (
-		<button
-			type="button"
+		<div
+			// biome-ignore lint/a11y/useSemanticElements: <TODO: fix later>
+			role="button"
+			tabIndex={0}
 			className="md:col-span-1 flex flex-col gap-2 border-2 border-transparent hover:border-indigo-500"
 			onDragOver={(e) => {
 				e.preventDefault();
@@ -45,6 +47,6 @@ export const SidePlayer = ({
 					className="justify-start"
 				/>
 			</div>
-		</button>
+		</div>
 	);
 };
