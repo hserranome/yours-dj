@@ -4,6 +4,7 @@ import { usePlaybackManager } from "./utils/usePlaybackManager";
 import { SidePlayer } from "./SidePlayer";
 import { getVolumes } from "./utils/getVolumes";
 import { CenterControls } from "./CenterControls";
+import { Library } from "./Library";
 
 export const DJTable = () => {
 	const [crossfader, setCrossfader] = useState(0.5);
@@ -22,6 +23,7 @@ export const DJTable = () => {
 		<div className="min-h-screen bg-gray-900 text-white p-4">
 			<h1 className="text-2xl font-bold text-center mb-6">Yours DJ</h1>
 
+			{/* Players */}
 			<div className="container mx-auto">
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 					<SidePlayer
@@ -44,11 +46,9 @@ export const DJTable = () => {
 				</div>
 			</div>
 
-			<div className="mt-8 text-center text-sm text-gray-400">
-				<p>
-					Drag the crossfader to transition between videos. Use individual
-					volume controls to adjust each track.
-				</p>
+			{/* Library */}
+			<div className="container mx-auto">
+				<Library />
 			</div>
 		</div>
 	);
