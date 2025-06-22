@@ -1,3 +1,6 @@
+import clsx from "clsx";
+import { Button } from "../Button";
+
 export const VolumeSlider = ({
 	isMuted,
 	onMuteToggle,
@@ -10,27 +13,27 @@ export const VolumeSlider = ({
 	onVolumeChange: (volume: number) => void;
 }) => {
 	return (
-		<div className="w-full px-4">
-			<div className="flex items-center gap-4">
-				<button
-					type="button"
-					onClick={onMuteToggle}
-					className="p-2 rounded-full hover:bg-gray-700 transition-colors"
-					aria-label={isMuted ? "Unmute" : "Mute"}
+		<div className="flex align-center gap-4">
+			<Button
+				type="button"
+				onClick={onMuteToggle}
+				aria-label={isMuted ? "Unmute" : "Mute"}
+			>
+				<span
+					className={clsx(!isMuted ? "text-yellow-950" : "text-yellow-300")}
 				>
-					{isMuted ? "🔇" : "🔊"}
-				</button>
-				<input
-					type="range"
-					min="0"
-					max="1"
-					step="0.01"
-					value={volume}
-					onChange={(e) => onVolumeChange(parseFloat(e.target.value))}
-					className="flex-1 accent-indigo-500"
-				/>
-				<span className="w-12 text-right">{Math.round(volume * 100)}%</span>
-			</div>
+					MUTE
+				</span>
+			</Button>
+			<input
+				type="range"
+				min="0"
+				max="1"
+				step="0.01"
+				value={volume}
+				onChange={(e) => onVolumeChange(parseFloat(e.target.value))}
+				className="flex-1 accent-indigo-500"
+			/>
 		</div>
 	);
 };

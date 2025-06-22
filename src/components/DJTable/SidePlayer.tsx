@@ -34,7 +34,8 @@ export const SidePlayer = ({
 				setDragOver(false);
 			}}
 		>
-			<VideoPlayer highlight={dragOver}
+			<VideoPlayer
+				highlight={dragOver}
 				ref={side.ref}
 				videoId={side.id}
 				effectiveVolume={effectiveVolume}
@@ -46,12 +47,13 @@ export const SidePlayer = ({
 					onPlay={() => side.ref.current?.play()}
 					onPause={() => side.ref.current?.pause()}
 					onStop={() => side.ref.current?.stop()}
+					isPlaying={side.state === "playing"}
 					className="justify-start"
 				/>
 			</div>
 			<div className="mt-4">
 				<VolumeSlider
-					isMuted={muted}
+					isMuted={side.muted}
 					onMuteToggle={() => side.change({ muted: !side.muted })}
 					volume={side.volume}
 					onVolumeChange={(volume) => side.change({ volume })}

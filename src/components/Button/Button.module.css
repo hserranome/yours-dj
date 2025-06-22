@@ -1,0 +1,8 @@
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+
+    @apply p-3 rounded-md bg-gray-800 hover:bg-gray-700 text-white transition-colors font-mono;
+}

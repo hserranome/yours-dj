@@ -1,9 +1,15 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { DJTable } from "~/components/DJTable";
+import { createFileRoute, Link } from "@tanstack/react-router";
 export const Route = createFileRoute("/")({
 	component: Home,
 });
 
 function Home() {
-	return <DJTable />;
+	return (
+		<div>
+			<h2>hello</h2>
+			<Link to="/session/$sessionId" params={{ sessionId: "123" }}>
+				Join Session
+			</Link>
+		</div>
+	);
 }

@@ -48,7 +48,7 @@ const defaultPlayerState: TrackState = {
 
 export const useSessionStore = create<SessionState>()(
 	persist(
-		(set, get) => ({
+		(set, _get) => ({
 			library: [],
 			players: {
 				left: { ...defaultPlayerState },

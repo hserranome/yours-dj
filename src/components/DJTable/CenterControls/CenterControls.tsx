@@ -1,9 +1,11 @@
-import { Crossfader } from "./Crossfader";
+import { Crossfader } from "../Crossfader";
 import idleGif from "~/assets/idle.gif";
 import playingGif from "~/assets/playing.gif";
 import plateBackground from "~/assets/plate-background.jpg";
 import { useSessionStore } from "~/store/session";
-import { PlaybackControls } from "./PlaybackControls";
+import { PlaybackControls } from "../PlaybackControls";
+import styles from "./CenterControls.module.css";
+import clsx from "clsx";
 
 export const CenterControls = ({
 	crossfader,
@@ -26,11 +28,16 @@ export const CenterControls = ({
 
 	return (
 		<div className="flex flex-col items-center justify-end gap-6">
-			<div className="relative w-full max-w-md h-48 flex items-center justify-center mb-auto overflow-hidden rounded-lg">
+			<div
+				className={clsx(
+					styles.imageIn,
+					"relative w-full h-48 flex mb-auto overflow-hidden rounded-lg",
+				)}
+			>
 				<div
-					className={
-						"absolute inset-0 bg-repeat-x bg-center bg-cover select-none pointer-events-none animate-marquee-bg"
-					}
+					className={clsx(
+						"absolute inset-0 bg-repeat-x bg-center bg-cover select-none pointer-events-none animate-marquee-bg",
+					)}
 					style={{
 						backgroundImage: `url(${plateBackground})`,
 						animationDuration: "8s",
@@ -40,18 +47,18 @@ export const CenterControls = ({
 				<img
 					src={brandImg}
 					alt="DJ status"
-					className={`relative z-10 object-contain ${imgSizeClass}`}
+					className={clsx(`relative z-10 object-contain`, imgSizeClass)}
 				/>
 			</div>
 			<div className="w-full max-w-md">
 				<Crossfader value={crossfader} onChange={setCrossfader} />
 			</div>
-			<div className="bg-gray-800 p-4 rounded-lg w-full max-w-md">
-				<h3 className="text-center font-medium mb-3">Global Controls</h3>
+			<div className="p-4 rounded-lg w-full max-w-md">
 				<PlaybackControls
 					onPlay={playAll}
 					onPause={pauseAll}
 					onStop={stopAll}
+					isPlaying={anyPlaying}
 					className="justify-center"
 				/>
 			</div>

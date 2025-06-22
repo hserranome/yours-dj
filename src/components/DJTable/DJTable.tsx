@@ -31,8 +31,8 @@ export const DJTable = () => {
 				backgroundPosition: "center",
 			}}
 		>
-			<div className={clsx("container mx-auto mt-8", styles.DJTable)}>
-				<div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-5 z-10 rounded-2xl bg-slate-800">
+			<div className={clsx("mt-8 mx-12")}>
+				<div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-5 rounded-2xl bg-slate-800 skeu-elem">
 					<SidePlayer
 						side={left}
 						effectiveVolume={volumes.left.volume}
@@ -52,7 +52,9 @@ export const DJTable = () => {
 					/>
 				</div>
 			</div>
-			<div className="container mx-auto">{/* <Library /> */}</div>
+			<div className="mx-12 mt-20">
+				<Library />
+			</div>
 		</div>
 	);
 };

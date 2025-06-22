@@ -103,7 +103,7 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 			<div className="flex flex-col items-center w-full overflow-hidden">
 				<div
 					className={clsx(
-						"animate-spin relative h-72 w-72 justify-center items-center",
+						"animate-spin relative h-72 w-full justify-center items-center",
 						highlight ? "ring-4 ring-indigo-400 rounded-full" : "",
 					)}
 					style={{
@@ -140,7 +140,7 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 				</div>
 				{youtubeInfo?.title && (
 					<div
-						className="mt-4 w-72 overflow-hidden whitespace-nowrap"
+						className="mt-4 w-full overflow-hidden whitespace-nowrap"
 						title={youtubeInfo.title}
 					>
 						<p
