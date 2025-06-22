@@ -1,9 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { AddUrlInput } from "./AddUrlInput";
 import { VideoList } from "./VideoList";
-// import { Search } from "./Search";
+
+import ComfyJS from "comfy.js";
+import { useLibraryAdd } from "./useLibrary";
 
 export const Library: React.FC = () => {
+	const addUrl = useLibraryAdd({});
+
+	useEffect(() => {
+		ComfyJS.onCommand = (_user, command, message) => {
+			if (command === "sugerir") {
+				addUrl(message);
+			}
+		};
+		ComfyJS.Init("clumsybollito");
+		return () => {
+			ComfyJS.Disconnect();
+		};
+	}, [addUrl]);
+
 	return (
 		<div className="flex bg-gray-800 rounded-lg overflow-hidden h-96 mt-8">
 			{/* Library sidebar */}

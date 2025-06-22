@@ -1,13 +1,5 @@
 import { useState } from "react";
-import { getYoutubeInfo } from "../utils/getYoutubeInfo";
-import { useSessionStore } from "../../../store/session";
-
-function extractVideoId(url: string): string | null {
-	const regex =
-		/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([A-Za-z0-9_-]{11})/;
-	const match = url.match(regex);
-	return match ? match[1] : null;
-}
+import { useLibraryAdd } from "./useLibrary";
 
 interface AddUrlInputProps {
 	className?: string;
@@ -15,34 +7,21 @@ interface AddUrlInputProps {
 
 export const AddUrlInput: React.FC<AddUrlInputProps> = ({ className }) => {
 	const [urlInput, setUrlInput] = useState("");
-	const addToLibrary = useSessionStore((s) => s.addToLibrary);
 	const [error, setError] = useState<string | null>(null);
 	const [loading, setLoading] = useState(false);
 
+	const handler = useLibraryAdd({
+		onError: (message) => setError(message),
+		onFinish: () => setLoading(false),
+		onSuccess: () => {
+			setUrlInput("");
+		},
+	});
+
 	const handleAdd = async () => {
 		setError(null);
-		const id = extractVideoId(urlInput.trim());
-		if (!id) {
-			setError("Please enter a valid YouTube URL");
-			return;
-		}
-
-		try {
-			setLoading(true);
-			const info = await getYoutubeInfo(urlInput.trim());
-			addToLibrary({
-				id,
-				url: urlInput.trim(),
-				title: info.title,
-				author: info.author_name,
-				thumbnail: info.thumbnail_url,
-			});
-			setUrlInput("");
-		} catch (err) {
-			setError((err as Error).message);
-		} finally {
-			setLoading(false);
-		}
+		handler(urlInput);
+		setLoading(false);
 	};
 
 	return (

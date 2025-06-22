@@ -13,6 +13,7 @@
     "@tanstack/react-router-devtools": "^1.121.27",
     "@tanstack/react-start": "^1.121.32",
     "clsx": "^2.1.1",
+    "comfy.js": "^1.1.27",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^2.6.0",
