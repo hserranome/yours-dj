@@ -27,7 +27,10 @@ interface VideoPlayerProps {
 }
 
 const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
-	({ videoId, effectiveVolume, isMuted, highlight = false, onStateChange }, ref) => {
+	(
+		{ videoId, effectiveVolume, isMuted, highlight = false, onStateChange },
+		ref,
+	) => {
 		const iframeRef = useRef<HTMLIFrameElement>(null);
 		const playerState = useRef<PlayerState>("stopped");
 		const [youtubeInfo, setYoutubeInfo] = useState<YoutubeInfo | null>(null);
@@ -97,7 +100,9 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 
 		return (
 			<div className="flex flex-col items-center w-full">
-				<div className={`relative h-72 w-72 justify-center items-center ${highlight ? 'ring-4 ring-indigo-400 rounded-full' : ''}`}>
+				<div
+					className={`overflow-hidden relative h-72 w-72 justify-center items-center ${highlight ? "ring-4 ring-indigo-400 rounded-full" : ""}`}
+				>
 					<img
 						src={vinylImg}
 						alt="Vinyl disc"
