@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getYoutubeInfo, YoutubeInfo } from "./utils/getYoutubeInfo";
+import { getYoutubeInfo, type YoutubeInfo } from "./utils/getYoutubeInfo";
 
 interface LibraryItem extends YoutubeInfo {
   url: string;
@@ -67,7 +67,14 @@ export const Library = () => {
           {items.map((item) => (
             <div
               key={item.id + item.url}
-              className="flex items-center gap-2 bg-gray-900 p-2 rounded"
+              className="flex items-center gap-2 bg-gray-900 p-2 rounded cursor-grab active:cursor-grabbing focus:ring-2 focus:ring-indigo-500 outline-none"
+              role="button"
+              tabIndex={0}
+              draggable
+              onDragStart={(e) => {
+                e.dataTransfer.setData("videoId", item.id);
+                e.dataTransfer.effectAllowed = "copy";
+              }}
             >
               <img
                 src={item.thumbnail_url}

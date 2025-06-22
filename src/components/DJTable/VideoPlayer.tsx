@@ -63,7 +63,13 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 			}
 		}, []);
 
-		useImperativeHandle(
+		// Helper to apply volume & mute settings to the iframe
+    const applyVolumeMute = useCallback(() => {
+      sendCommand("setVolume", Math.round(effectiveVolume * 100));
+      sendCommand(isMuted ? "mute" : "unMute");
+    }, [effectiveVolume, isMuted, sendCommand]);
+
+    useImperativeHandle(
 			ref,
 			() => ({
 				play: () => {
@@ -80,6 +86,8 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 								JSON.stringify(message),
 								"*",
 							);
+							// Apply volume right after sending load command
+							applyVolumeMute();
 						}
 					} else {
 						sendCommand("playVideo");
@@ -96,7 +104,7 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 				},
 				getState: () => playerState.current,
 			}),
-			[videoId, sendCommand, updateState],
+			[videoId, sendCommand, updateState, applyVolumeMute],
 		);
 
 		// Handle YouTube API ready
@@ -107,7 +115,9 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 				try {
 					console.log("YouTube message:", event.data);
 					const data = JSON.parse(event.data);
-					if (data.event === "onStateChange") {
+					if (data.event === "onReady") {
+        applyVolumeMute();
+      } else if (data.event === "onStateChange") {
 						if (data.info === 1) updateState("playing");
 						else if (data.info === 2) updateState("paused");
 						else if (data.info === 0) updateState("stopped");
@@ -120,15 +130,14 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 
 			window.addEventListener("message", handleMessage);
 			return () => window.removeEventListener("message", handleMessage);
-		}, [updateState]);
+		}, [updateState, applyVolumeMute]);
 
-		// Handle volume and mute state changes
-		useEffect(() => {
-			if (playerState.current !== "stopped") {
-				sendCommand("setVolume", Math.round(effectiveVolume * 100));
-				sendCommand(isMuted ? "mute" : "unMute");
-			}
-		}, [effectiveVolume, isMuted, sendCommand]);
+		// applyVolumeMute defined earlier
+
+    useEffect(() => {
+      // Try immediately; if player not ready, we'll retry on 'onReady'.
+      applyVolumeMute();
+    }, [applyVolumeMute]);
 
 		return (
 			<div className="flex flex-col items-center w-full h-full">
