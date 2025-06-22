@@ -4,8 +4,10 @@ import {
 	useImperativeHandle,
 	forwardRef,
 	useCallback,
+	useState,
 } from "react";
 import vinylImg from "../../../assets/vinyl.png";
+import { getYoutubeInfo, type YoutubeInfo } from "../utils/getYoutubeInfo";
 
 export type PlayerState = "stopped" | "playing" | "paused";
 
@@ -27,6 +29,7 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 	({ videoId, effectiveVolume, isMuted, onStateChange }, ref) => {
 		const iframeRef = useRef<HTMLIFrameElement>(null);
 		const playerState = useRef<PlayerState>("stopped");
+		const [youtubeInfo, setYoutubeInfo] = useState<YoutubeInfo | null>(null);
 
 		const updateState = useCallback(
 			(newState: PlayerState) => {
@@ -98,6 +101,14 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 			[videoId, sendCommand, updateState, applyVolumeMute],
 		);
 
+		useEffect(() => {
+			if (videoId) {
+				getYoutubeInfo(`https://www.youtube.com/watch?v=${videoId}`).then(
+					setYoutubeInfo,
+				);
+			}
+		}, [videoId]);
+
 		const isPlaying = playerState.current === "playing";
 
 		return (
@@ -106,11 +117,18 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 					<img
 						src={vinylImg}
 						alt="Vinyl disc"
-						className={`z-10 absolute inset-0 w-full h-full object-contain rounded-full ${isPlaying ? "animate-spin" : ""}`}
+						className={`z-20 absolute inset-0 w-full h-full object-contain rounded-full ${isPlaying ? "animate-spin" : ""}`}
 						style={isPlaying ? { animationDuration: "8s" } : undefined}
 					/>
 					<div className="absolute inset-0 flex items-center justify-center">
 						<div className="w-10/12 aspect-video relative overflow-hidden rounded-md shadow-md">
+							{!isPlaying ? (
+								<img
+									src={youtubeInfo?.thumbnail_url}
+									alt={youtubeInfo?.title}
+									className="w-full h-full object-cover rounded z-10 relative"
+								/>
+							) : null}
 							<iframe
 								ref={iframeRef}
 								width="100%"
