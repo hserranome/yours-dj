@@ -1,6 +1,7 @@
 import { Crossfader } from "./Crossfader";
 import idleGif from "~/assets/idle.gif";
 import playingGif from "~/assets/playing.gif";
+import plateBackground from "~/assets/plate-background.jpg";
 import { useSessionStore } from "~/store/session";
 import { PlaybackControls } from "./PlaybackControls";
 
@@ -25,12 +26,19 @@ export const CenterControls = ({
 
 	return (
 		<div className="flex flex-col items-center justify-end gap-6">
-			{/* Brand image */}
-			<div className="w-full max-w-md h-48 flex items-center justify-center mb-auto bg-slate-700 rounded-lg">
+			<div className="relative w-full max-w-md h-48 flex items-center justify-center mb-auto overflow-hidden rounded-lg">
+				<div
+					className={`absolute inset-0 bg-repeat-x bg-center bg-cover select-none pointer-events-none ${anyPlaying ? "animate-marquee-bg" : ""}`}
+					style={{
+						backgroundImage: `url(${plateBackground})`,
+						animationDuration: "8s",
+						animationPlayState: anyPlaying ? "running" : "paused",
+					}}
+				/>
 				<img
 					src={brandImg}
 					alt="DJ status"
-					className={`object-contain ${imgSizeClass}`}
+					className={`relative z-10 object-contain ${imgSizeClass}`}
 				/>
 			</div>
 			<div className="w-full max-w-md">
