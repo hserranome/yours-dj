@@ -12,19 +12,21 @@ export const SidePlayer = ({
 	muted: boolean;
 }) => {
 	return (
-		<div
-	className="md:col-span-1 flex flex-col gap-2 border-2 border-transparent hover:border-indigo-500"
-	onDragOver={(e) => {
-		e.preventDefault();
-		e.dataTransfer.dropEffect = "copy";
-	}}
-	onDrop={(e) => {
-		e.preventDefault();
-		const id = e.dataTransfer.getData("videoId");
-		if (id) {
-			side.change({ id });
-		}
-	}}>
+		<button
+			type="button"
+			className="md:col-span-1 flex flex-col gap-2 border-2 border-transparent hover:border-indigo-500"
+			onDragOver={(e) => {
+				e.preventDefault();
+				e.dataTransfer.dropEffect = "copy";
+			}}
+			onDrop={(e) => {
+				e.preventDefault();
+				const id = e.dataTransfer.getData("videoId");
+				if (id) {
+					side.change({ id });
+				}
+			}}
+		>
 			<VideoPlayer
 				ref={side.ref}
 				videoId={side.id}
@@ -43,6 +45,6 @@ export const SidePlayer = ({
 					className="justify-start"
 				/>
 			</div>
-		</div>
+		</button>
 	);
 };
