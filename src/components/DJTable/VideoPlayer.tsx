@@ -105,6 +105,7 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 				if (event.origin !== "https://www.youtube.com") return;
 
 				try {
+					console.log("YouTube message:", event.data);
 					const data = JSON.parse(event.data);
 					if (data.event === "onStateChange") {
 						if (data.info === 1) updateState("playing");
