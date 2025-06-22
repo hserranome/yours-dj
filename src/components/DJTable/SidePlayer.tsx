@@ -3,6 +3,8 @@ import type { useVideoState } from "./utils/useVideoState";
 import { VideoPlayer } from "./VideoPlayer";
 import { VolumeSlider } from "./VolumeSlider";
 
+import { useState } from "react";
+
 export const SidePlayer = ({
 	side,
 	effectiveVolume,
@@ -12,6 +14,7 @@ export const SidePlayer = ({
 	effectiveVolume: number;
 	muted: boolean;
 }) => {
+	const [dragOver, setDragOver] = useState(false);
 	return (
 		// biome-ignore lint/a11y/noStaticElementInteractions: <TODO: fix later>
 		<div
@@ -19,16 +22,19 @@ export const SidePlayer = ({
 			onDragOver={(e) => {
 				e.preventDefault();
 				e.dataTransfer.dropEffect = "copy";
+				setDragOver(true);
 			}}
+			onDragLeave={() => setDragOver(false)}
 			onDrop={(e) => {
 				e.preventDefault();
 				const id = e.dataTransfer.getData("videoId");
 				if (id) {
 					side.change({ id });
 				}
+				setDragOver(false);
 			}}
 		>
-			<VideoPlayer
+			<VideoPlayer highlight={dragOver}
 				ref={side.ref}
 				videoId={side.id}
 				effectiveVolume={effectiveVolume}
