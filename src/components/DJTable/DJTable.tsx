@@ -22,10 +22,7 @@ export const DJTable = () => {
 
 	return (
 		<div className="min-h-screen bg-gray-900 text-white p-4">
-			<h1 className="text-2xl font-bold text-center mb-6">Yours DJ</h1>
-
-			{/* Players */}
-			<div className="container mx-auto">
+			<div className="container mx-auto mt-12">
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 					<SidePlayer
 						side={left}
@@ -46,8 +43,6 @@ export const DJTable = () => {
 					/>
 				</div>
 			</div>
-
-			{/* Library */}
 			<div className="container mx-auto">
 				<Library />
 			</div>
