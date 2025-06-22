@@ -112,7 +112,7 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 								<img
 									src={youtubeInfo?.thumbnail_url}
 									alt={youtubeInfo?.title}
-									className="w-9/12 h-full object-cover rounded z-10 relative mx-auto"
+									className="w-9/12 h-full object-cover rounded z-10 relative mx-auto bg-yellow-600"
 								/>
 							) : null}
 							<iframe
