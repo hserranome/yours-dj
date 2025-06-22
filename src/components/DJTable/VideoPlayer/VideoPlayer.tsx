@@ -30,7 +30,6 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 		const iframeRef = useRef<HTMLIFrameElement>(null);
 		const playerState = useRef<PlayerState>("stopped");
 		const [youtubeInfo, setYoutubeInfo] = useState<YoutubeInfo | null>(null);
-		console.log("youtubeInfo", youtubeInfo);
 
 		const updateState = useCallback(
 			(newState: PlayerState) => {
