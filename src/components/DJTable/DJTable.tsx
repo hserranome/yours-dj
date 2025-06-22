@@ -1,69 +1,72 @@
 import { useCallback, useState, useRef } from "react";
-import { VideoPlayer, type VideoPlayerRef, type PlayerState } from "./VideoPlayer";
+import {
+	VideoPlayer,
+	type VideoPlayerRef,
+	type PlayerState,
+} from "./VideoPlayer";
 import { Crossfader } from "./Crossfader";
 import { PlaybackControls } from "./PlaybackControls";
 
 type VideoState = {
-  id: string;
-  volume: number;
-  isMuted: boolean;
-  state: PlayerState;
+	id: string;
+	volume: number;
+	isMuted: boolean;
+	state: PlayerState;
 };
 
 export const DJTable = () => {
-  // Refs for video player controls
-  const leftVideoRef = useRef<VideoPlayerRef>(null);
-  const rightVideoRef = useRef<VideoPlayerRef>(null);
+	// Refs for video player controls
+	const leftVideoRef = useRef<VideoPlayerRef>(null);
+	const rightVideoRef = useRef<VideoPlayerRef>(null);
 
-  // Video states
-  const [leftVideo, setLeftVideo] = useState<VideoState>({
-    id: "dQw4w9WgXcQ", // Default video ID (Rick Astley - Never Gonna Give You Up)
-    volume: 0.5,
-    isMuted: false,
-    state: 'stopped',
-  });
+	// Video states
+	const [leftVideo, setLeftVideo] = useState<VideoState>({
+		id: "N87E3Kz3Hmo",
+		volume: 0.5,
+		isMuted: false,
+		state: "stopped",
+	});
 
-  const [rightVideo, setRightVideo] = useState<VideoState>({
-    id: "9bZkp7q19f0", // Default video ID (PSY - GANGNAM STYLE)
-    volume: 0.5,
-    isMuted: false,
-    state: 'stopped',
-  });
+	const [rightVideo, setRightVideo] = useState<VideoState>({
+		id: "nP9mB1sVJz4", // Default video ID (PSY - GANGNAM STYLE)
+		volume: 0.5,
+		isMuted: false,
+		state: "stopped",
+	});
 
-  const [crossfader, setCrossfader] = useState(0.5); // 0 = left, 1 = right
-  
-  // Handle video state changes
-  const handleLeftVideoStateChange = (state: PlayerState) => {
-    setLeftVideo(prev => ({ ...prev, state }));
-  };
+	const [crossfader, setCrossfader] = useState(0.5); // 0 = left, 1 = right
 
-  const handleRightVideoStateChange = (state: PlayerState) => {
-    setRightVideo(prev => ({ ...prev, state }));
-  };
-  
-  // Global playback controls
-  const playAll = () => {
-    leftVideoRef.current?.play();
-    rightVideoRef.current?.play();
-  };
-  
-  const pauseAll = () => {
-    leftVideoRef.current?.pause();
-    rightVideoRef.current?.pause();
-  };
-  
-  const stopAll = () => {
-    leftVideoRef.current?.stop();
-    rightVideoRef.current?.stop();
-  };
+	// Handle video state changes
+	const handleLeftVideoStateChange = (state: PlayerState) => {
+		setLeftVideo((prev) => ({ ...prev, state }));
+	};
 
-	// Calculate effective volumes based on crossfader position
+	const handleRightVideoStateChange = (state: PlayerState) => {
+		setRightVideo((prev) => ({ ...prev, state }));
+	};
+
+	// Global playback controls
+	const playAll = () => {
+		leftVideoRef.current?.play();
+		rightVideoRef.current?.play();
+	};
+
+	const pauseAll = () => {
+		leftVideoRef.current?.pause();
+		rightVideoRef.current?.pause();
+	};
+
+	const stopAll = () => {
+		leftVideoRef.current?.stop();
+		rightVideoRef.current?.stop();
+	};
+
 	const getEffectiveVolumes = useCallback(() => {
-		// When crossfader is at 0 (left), left is at 100%, right at 0%
-		// When crossfader is at 1 (right), left is at 0%, right at 100%
-		// Linear crossfade
-		const leftGain = 1 - crossfader;
-		const rightGain = crossfader;
+		const crossfadeClamped = Math.max(0, Math.min(1, crossfader));
+
+		const leftGain =
+			crossfadeClamped <= 0.5 ? 1 : 1 - (crossfadeClamped - 0.5) * 2;
+		const rightGain = crossfadeClamped >= 0.5 ? 1 : crossfadeClamped * 2;
 
 		return {
 			left: leftVideo.volume * leftGain,
@@ -72,11 +75,10 @@ export const DJTable = () => {
 	}, [crossfader, leftVideo.volume, rightVideo.volume]);
 
 	// Calculate effective volumes
-	const effectiveVolumes = getEffectiveVolumes();
-
-	// Apply mute state to the effective volumes
-	const leftVolume = leftVideo.isMuted ? 0 : effectiveVolumes.left;
-	const rightVolume = rightVideo.isMuted ? 0 : effectiveVolumes.right;
+	const { left: effectiveVolumeLeft, right: effectiveVolumeRight } =
+		getEffectiveVolumes();
+	const leftMuted = leftVideo.isMuted || effectiveVolumeLeft === 0;
+	const rightMuted = rightVideo.isMuted || effectiveVolumeRight === 0;
 
 	return (
 		<div className="min-h-screen bg-gray-900 text-white p-4">
@@ -87,69 +89,69 @@ export const DJTable = () => {
 					{/* Left Video */}
 					<div className="md:col-span-1 flex flex-col gap-2">
 						<VideoPlayer
-              ref={leftVideoRef}
+							ref={leftVideoRef}
 							videoId={leftVideo.id}
 							volume={leftVideo.volume}
-							effectiveVolume={leftVolume}
+							effectiveVolume={effectiveVolumeLeft}
 							onVolumeChange={(volume) =>
 								setLeftVideo((prev) => ({ ...prev, volume }))
 							}
-							isMuted={leftVideo.isMuted}
+							isMuted={leftMuted}
 							onMuteToggle={() =>
 								setLeftVideo((prev) => ({ ...prev, isMuted: !prev.isMuted }))
 							}
-              onStateChange={handleLeftVideoStateChange}
+							onStateChange={handleLeftVideoStateChange}
 						/>
-            <div className="mt-2">
-              <PlaybackControls
-                onPlay={() => leftVideoRef.current?.play()}
-                onPause={() => leftVideoRef.current?.pause()}
-                onStop={() => leftVideoRef.current?.stop()}
-                className="justify-start"
-              />
-            </div>
+						<div className="mt-2">
+							<PlaybackControls
+								onPlay={() => leftVideoRef.current?.play()}
+								onPause={() => leftVideoRef.current?.pause()}
+								onStop={() => leftVideoRef.current?.stop()}
+								className="justify-start"
+							/>
+						</div>
 					</div>
 
 					{/* Center Controls */}
-          <div className="flex flex-col items-center justify-center gap-6">
-            <div className="w-full max-w-md">
-              <Crossfader value={crossfader} onChange={setCrossfader} />
-            </div>
-            <div className="bg-gray-800 p-4 rounded-lg w-full max-w-md">
-              <h3 className="text-center font-medium mb-3">Global Controls</h3>
-              <PlaybackControls
-                onPlay={playAll}
-                onPause={pauseAll}
-                onStop={stopAll}
-                className="justify-center"
-              />
-            </div>
-          </div>
+					<div className="flex flex-col items-center justify-center gap-6">
+						<div className="w-full max-w-md">
+							<Crossfader value={crossfader} onChange={setCrossfader} />
+						</div>
+						<div className="bg-gray-800 p-4 rounded-lg w-full max-w-md">
+							<h3 className="text-center font-medium mb-3">Global Controls</h3>
+							<PlaybackControls
+								onPlay={playAll}
+								onPause={pauseAll}
+								onStop={stopAll}
+								className="justify-center"
+							/>
+						</div>
+					</div>
 
 					{/* Right Video */}
 					<div className="md:col-span-1 flex flex-col gap-2">
 						<VideoPlayer
-              ref={rightVideoRef}
+							ref={rightVideoRef}
 							videoId={rightVideo.id}
 							volume={rightVideo.volume}
-							effectiveVolume={rightVolume}
+							effectiveVolume={effectiveVolumeRight}
 							onVolumeChange={(volume) =>
 								setRightVideo((prev) => ({ ...prev, volume }))
 							}
-							isMuted={rightVideo.isMuted}
+							isMuted={rightMuted}
 							onMuteToggle={() =>
 								setRightVideo((prev) => ({ ...prev, isMuted: !prev.isMuted }))
 							}
-              onStateChange={handleRightVideoStateChange}
+							onStateChange={handleRightVideoStateChange}
 						/>
-            <div className="mt-2">
-              <PlaybackControls
-                onPlay={() => rightVideoRef.current?.play()}
-                onPause={() => rightVideoRef.current?.pause()}
-                onStop={() => rightVideoRef.current?.stop()}
-                className="justify-end"
-              />
-            </div>
+						<div className="mt-2">
+							<PlaybackControls
+								onPlay={() => rightVideoRef.current?.play()}
+								onPause={() => rightVideoRef.current?.pause()}
+								onStop={() => rightVideoRef.current?.stop()}
+								className="justify-end"
+							/>
+						</div>
 					</div>
 				</div>
 			</div>
