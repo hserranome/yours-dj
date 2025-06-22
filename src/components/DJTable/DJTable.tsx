@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useState } from "react";
 import { VideoPlayer } from "./VideoPlayer";
 import { Crossfader } from "./Crossfader";
 
@@ -49,7 +49,8 @@ export const DJTable = () => {
 					<div className="md:col-span-1">
 						<VideoPlayer
 							videoId={leftVideo.id}
-							volume={leftVolume}
+							volume={leftVideo.volume}
+							effectiveVolume={leftVolume}
 							onVolumeChange={(volume) =>
 								setLeftVideo((prev) => ({ ...prev, volume }))
 							}
@@ -71,7 +72,8 @@ export const DJTable = () => {
 					<div className="md:col-span-1">
 						<VideoPlayer
 							videoId={rightVideo.id}
-							volume={rightVolume}
+							volume={rightVideo.volume}
+							effectiveVolume={rightVolume}
 							onVolumeChange={(volume) =>
 								setRightVideo((prev) => ({ ...prev, volume }))
 							}

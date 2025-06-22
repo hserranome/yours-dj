@@ -2,7 +2,8 @@ import { useRef, useEffect } from 'react';
 
 interface VideoPlayerProps {
   videoId: string;
-  volume: number;
+  volume: number; // The volume level to show in the UI (0-1)
+  effectiveVolume: number; // The actual volume to apply to the video (0-1)
   onVolumeChange: (volume: number) => void;
   isMuted: boolean;
   onMuteToggle: () => void;
@@ -11,6 +12,7 @@ interface VideoPlayerProps {
 export const VideoPlayer = ({
   videoId,
   volume,
+  effectiveVolume,
   onVolumeChange,
   isMuted,
   onMuteToggle,
@@ -18,16 +20,16 @@ export const VideoPlayer = ({
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
-    // Update the YouTube player's volume when the volume prop changes
+    // Update the YouTube player's volume when the effectiveVolume prop changes
     if (iframeRef.current?.contentWindow) {
       const message = {
         event: 'command',
         func: 'setVolume',
-        args: [volume * 100],
+        args: [effectiveVolume * 100],
       };
       iframeRef.current.contentWindow.postMessage(JSON.stringify(message), '*');
     }
-  }, [volume]);
+  }, [effectiveVolume]);
 
   return (
     <div className="flex flex-col items-center w-full h-full">
