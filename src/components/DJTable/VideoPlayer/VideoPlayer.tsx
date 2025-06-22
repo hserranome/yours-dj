@@ -30,6 +30,7 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 		const iframeRef = useRef<HTMLIFrameElement>(null);
 		const playerState = useRef<PlayerState>("stopped");
 		const [youtubeInfo, setYoutubeInfo] = useState<YoutubeInfo | null>(null);
+		console.log("youtubeInfo", youtubeInfo);
 
 		const updateState = useCallback(
 			(newState: PlayerState) => {
@@ -112,7 +113,7 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 								<img
 									src={youtubeInfo?.thumbnail_url}
 									alt={youtubeInfo?.title}
-									className="w-9/12 h-full object-cover rounded z-10 relative mx-auto bg-yellow-600"
+									className="w-9/12 h-full object-cover rounded z-10 relative mx-auto bg-yellow-600 pointer-events-none"
 								/>
 							) : null}
 							<iframe
@@ -128,6 +129,11 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 						</div>
 					</div>
 				</div>
+				{youtubeInfo?.title && (
+					<p className="mt-4 w-72 text-center text-sm font-medium truncate" title={youtubeInfo.title}>
+						{youtubeInfo.title}
+					</p>
+				)}
 			</div>
 		);
 	},
