@@ -5,6 +5,8 @@ import { SidePlayer } from "./SidePlayer";
 import { getVolumes } from "./utils/getVolumes";
 import { CenterControls } from "./CenterControls";
 import { Library } from "./Library";
+import styles from "./DJTable.module.css";
+import clsx from "clsx";
 
 export const DJTable = () => {
 	const crossfader = useSessionStore((s) => s.controls.crossfader);
@@ -21,9 +23,16 @@ export const DJTable = () => {
 	const volumes = getVolumes(crossfader, left, right);
 
 	return (
-		<div className="min-h-screen bg-gray-900 text-white p-4">
-			<div className="container mx-auto mt-12">
-				<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+		<div
+			className="min-h-screen bg-gray-900 text-white p-2"
+			style={{
+				backgroundImage: `url(https://live.staticflickr.com/8159/28418275310_2bba496227_h.jpg)`,
+				backgroundSize: "cover",
+				backgroundPosition: "center",
+			}}
+		>
+			<div className={clsx("container mx-auto mt-8", styles.DJTable)}>
+				<div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-5 z-10 rounded-2xl bg-slate-800">
 					<SidePlayer
 						side={left}
 						effectiveVolume={volumes.left.volume}
@@ -43,9 +52,7 @@ export const DJTable = () => {
 					/>
 				</div>
 			</div>
-			<div className="container mx-auto">
-				<Library />
-			</div>
+			<div className="container mx-auto">{/* <Library /> */}</div>
 		</div>
 	);
 };
