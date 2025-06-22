@@ -10,8 +10,8 @@ export const DJTable = () => {
 	const crossfader = useSessionStore((s) => s.controls.crossfader);
 	const setCrossfader = useSessionStore((s) => s.setCrossfader);
 
-	const left = useVideoState();
-	const right = useVideoState();
+	const left = useVideoState({ side: "left" });
+	const right = useVideoState({ side: "right" });
 
 	const { playAll, pauseAll, stopAll } = usePlaybackControls(
 		left.ref,

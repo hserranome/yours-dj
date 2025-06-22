@@ -1,25 +1,25 @@
-import { useRef, useState } from "react";
-import type { PlayerState, VideoPlayerRef } from "../VideoPlayer";
+import { useRef } from "react";
+import type { VideoPlayerRef } from "../VideoPlayer";
+import { type TrackState, useSessionStore } from "~/store/session";
 
 export type VideoState = {
     id: string;
     volume: number;
     isMuted: boolean;
-    state: PlayerState;
+    state: TrackState;
 };
 
-export const useVideoState = () => {
+type UseVideoStateProps = {
+    side: 'left' | 'right';
+};
+
+export const useVideoState = ({ side }: UseVideoStateProps) => {
 	    const ref = useRef<VideoPlayerRef>(null);
+        const state = useSessionStore((s) => s.players[side]);
+        const setPlayerState = useSessionStore((s) => s.setPlayerState);
 
-        const [state, setState] = useState<VideoState>({
-            id: "N87E3Kz3Hmo",
-            volume: 0.5,
-            isMuted: false,
-            state: "stopped",
-        });
-
-        const change = (state: Partial<VideoState>) => {
-            setState((prev) => ({ ...prev, ...state }));
+        const change = (state: Partial<TrackState>) => {
+            setPlayerState(side, state);
         };
 
         return {

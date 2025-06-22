@@ -33,11 +33,11 @@ interface SessionState {
   setTrack: (side: PlayerSide, id: string) => void;
   setVolume: (side: PlayerSide, v: number) => void;
   toggleMute: (side: PlayerSide) => void;
-  setPlayerState: (side: PlayerSide, s: TrackPlayerState) => void;
+  setPlayerState: (side: PlayerSide, s: Partial<TrackState>) => void;
   setCrossfader: (v: number) => void;
 }
 
-const defaultTrack: TrackState = {
+const defaultPlayerState: TrackState = {
   id: "N87E3Kz3Hmo",
   volume: 0.5,
   muted: false,
@@ -46,7 +46,7 @@ const defaultTrack: TrackState = {
 
 export const useSessionStore = create<SessionState>((set) => ({
   library: [],
-  players: { left: { ...defaultTrack }, right: { ...defaultTrack } },
+  players: { left: { ...defaultPlayerState }, right: { ...defaultPlayerState } },
   controls: { crossfader: 0.5 },
 
   addToLibrary: (item) =>
@@ -62,7 +62,7 @@ export const useSessionStore = create<SessionState>((set) => ({
     set((s) => ({ players: { ...s.players, [side]: { ...s.players[side], muted: !s.players[side].muted } } })),
 
   setPlayerState: (side, state) =>
-    set((s) => ({ players: { ...s.players, [side]: { ...s.players[side], state } } })),
+    set((s) => ({ players: { ...s.players, [side]: { ...s.players[side], ...state } } })),
 
   setCrossfader: (crossfader) => set(() => ({ controls: { crossfader } })),
 }));

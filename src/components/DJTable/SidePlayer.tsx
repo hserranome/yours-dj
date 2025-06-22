@@ -46,7 +46,7 @@ export const SidePlayer = ({
 			<div className="mt-4">
 				<VolumeSlider
 					isMuted={muted}
-					onMuteToggle={() => side.change({ isMuted: !side.isMuted })}
+					onMuteToggle={() => side.change({ muted: !side.muted })}
 					volume={side.volume}
 					onVolumeChange={(volume) => side.change({ volume })}
 				/>
