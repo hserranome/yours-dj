@@ -1,7 +1,7 @@
 import React from "react";
 import { AddUrlInput } from "./AddUrlInput";
 import { VideoList } from "./VideoList";
-import { Search } from "./Search";
+// import { Search } from "./Search";
 
 export const Library: React.FC = () => {
 	return (
@@ -14,10 +14,10 @@ export const Library: React.FC = () => {
 			</aside>
 
 			{/* Search sidebar */}
-			<aside className="w-72 p-4 border-r border-gray-700 flex flex-col">
+			{/* <aside className="w-72 p-4 border-r border-gray-700 flex flex-col">
 				<h2 className="text-lg font-semibold mb-4">Search</h2>
 				<Search />
-			</aside>
+			</aside> */}
 
 			{/* Placeholder main area */}
 			<section className="flex-1" />

@@ -4,7 +4,7 @@
 
 @layer utilities {
   @keyframes marquee {
-    0%   { transform: translateX(0); }
+    0%   { transform: translateX(100%); }
     100% { transform: translateX(-100%); }
   }
   .animate-marquee {
@@ -12,7 +12,7 @@
     overflow: hidden;
     box-sizing: border-box;
 
-    animation: marquee 60s linear infinite;
+    animation: marquee 10s linear infinite;
   }
 }
 
